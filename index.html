@@ -417,21 +417,41 @@ const foodsData = [
 
 // 药膳食谱
 var recipesData = [
-  {name:"番茄炒蛋",ingredients:"番茄+鸡蛋",effect:"清热养阴，健脾开胃",suit:"体质偏热、食欲不振者",caution:"胃寒者少食"},
-  {name:"西兰花炒肉",ingredients:"西兰花+猪肉",effect:"清热利湿，补中益气",suit:"湿热体质、脾虚者",caution:"猪肉不宜与乌梅同食"},
-  {name:"红枣枸杞鸡汤",ingredients:"红枣+枸杞+鸡肉",effect:"温补气血，养肝明目",suit:"气血两虚、视力疲劳者",caution:"感冒发热者慎食"},
-  {name:"山药排骨汤",ingredients:"山药+排骨",effect:"健脾益气，补肾养血",suit:"脾肾两虚、体弱者",caution:"便秘者少食"},
-  {name:"绿豆百合粥",ingredients:"绿豆+百合+大米",effect:"清热解毒，养阴润肺",suit:"阴虚火旺、肺热咳嗽",caution:"体质虚寒者少食"},
-  {name:"生姜红糖水",ingredients:"生姜+红糖",effect:"温中散寒，补血活血",suit:"风寒感冒、胃寒腹痛",caution:"热性体质者少食"},
-  {name:"香蕉牛奶",ingredients:"香蕉+牛奶",effect:"清热润肠，滋养脾胃",suit:"便秘、阴虚体质",caution:"脾胃虚寒者少食"},
-  {name:"洋葱炒牛肉",ingredients:"洋葱+牛肉",effect:"温中散寒，补中益气",suit:"阳虚体质、寒性腹痛",caution:"热病患者慎食"},
-  {name:"核桃红枣糊",ingredients:"核桃+红枣",effect:"补肾温肺，养血安神",suit:"肾虚失眠、气血不足",caution:"便溏者慎用"},
-  {name:"黑芝麻糊",ingredients:"黑芝麻+糯米",effect:"补肝肾，益精血，乌发",suit:"须发早白、头晕眼花",caution:"便溏者慎用"},
-  {name:"桂圆红枣茶",ingredients:"桂圆+红枣+枸杞",effect:"补血养颜，益气安神",suit:"气血不足、失眠健忘",caution:"阴虚火旺者少饮"},
-  {name:"薏苡仁红豆粥",ingredients:"薏苡仁+红豆",effect:"健脾利湿，消肿美白",suit:"湿气重、水肿体质",caution:"孕妇慎用"},
-  {name:"冬瓜排骨汤",ingredients:"冬瓜+排骨",effect:"清热利尿，消肿祛湿",suit:"湿热体质、小便不利",caution:"脾胃虚寒者少食"},
-  {name:"莲子百合粥",ingredients:"莲子+百合+大米",effect:"养心安神，润肺止咳",suit:"失眠心悸、肺燥咳嗽",caution:"便溏者少食"},
-  {name:"黄芪当归汤",ingredients:"黄芪+当归",effect:"补气养血，调经止痛",suit:"气血两虚、月经不调",caution:"阴虚火旺者慎用"}
+  // 家常菜
+  {name:"番茄炒蛋",category:"家常菜",ingredients:"番茄2个+鸡蛋3个+葱姜适量",effect:"清热养阴，健脾开胃",suit:"体质偏热、食欲不振者",caution:"胃寒者少食",recipe:"1.番茄切块，鸡蛋打散；2.热锅下油，先炒鸡蛋至半熟盛出；3.再下番茄翻炒，加少许盐；4.放入鸡蛋一起翻炒均匀即可。"},
+  {name:"西兰花炒肉",category:"家常菜",ingredients:"西兰花200g+猪里脊肉100g+蒜末适量",effect:"清热利湿，补中益气",suit:"湿热体质、脾虚者",caution:"猪肉不宜与乌梅同食",recipe:"1.西兰花焯水备用；2.猪肉切片，用料酒、淀粉腌制；3.热锅下油翻炒肉片；4.加入西兰花、蒜末翻炒调味即可。"},
+  {name:"红枣枸杞鸡汤",category:"煲汤",ingredients:"红枣10颗+枸杞15g+鸡肉300g+姜3片",effect:"温补气血，养肝明目",suit:"气血两虚、视力疲劳者",caution:"感冒发热者慎食",recipe:"1.鸡肉切块焯水；2.红枣、枸杞洗净；3.锅中加水，放入所有食材；4.大火烧开后转小火炖1小时即可。"},
+  {name:"山药排骨汤",category:"煲汤",ingredients:"山药200g+排骨300g+枸杞10g+姜3片",effect:"健脾益气，补肾养血",suit:"脾肾两虚、体弱者",caution:"便秘者少食",recipe:"1.排骨焯水，山药切块；2.锅中加水，放入排骨、姜片；3.大火烧开后转小火炖30分钟；4.加入山药、枸杞再炖30分钟。"},
+  {name:"绿豆百合粥",category:"粥品",ingredients:"绿豆50g+百合30g+大米100g+冰糖适量",effect:"清热解毒，养阴润肺",suit:"阴虚火旺、肺热咳嗽",caution:"体质虚寒者少食",recipe:"1.绿豆、百合提前浸泡2小时；2.大米洗净放入锅中；3.加入绿豆、百合和适量水；4.大火烧开后转小火煮至粥稠。"},
+  {name:"生姜红糖水",category:"饮品",ingredients:"生姜30g+红糖50g+红枣5颗",effect:"温中散寒，补血活血",suit:"风寒感冒、胃寒腹痛",caution:"热性体质者少食",recipe:"1.生姜切片，红枣去核；2.锅中加水放入生姜、红枣；3.煮沸后小火煮10分钟；4.加入红糖搅拌至融化。"},
+  {name:"香蕉牛奶",category:"饮品",ingredients:"香蕉1根+牛奶200ml+蜂蜜适量",effect:"清热润肠，滋养脾胃",suit:"便秘、阴虚体质",caution:"脾胃虚寒者少食",recipe:"1.香蕉切块；2.放入料理机；3.加入牛奶和蜂蜜；4.搅拌均匀即可饮用。"},
+  {name:"洋葱炒牛肉",category:"家常菜",ingredients:"洋葱1个+牛肉200g+青椒1个",effect:"温中散寒，补中益气",suit:"阳虚体质、寒性腹痛",caution:"热病患者慎食",recipe:"1.牛肉切片，用酱油、淀粉腌制；2.洋葱、青椒切块；3.热锅下油先炒牛肉至变色；4.加入洋葱、青椒翻炒调味。"},
+  {name:"核桃红枣糊",category:"糊品",ingredients:"核桃30g+红枣10颗+黑芝麻20g+糯米50g",effect:"补肾温肺，养血安神",suit:"肾虚失眠、气血不足",caution:"便溏者慎用",recipe:"1.核桃、黑芝麻炒熟；2.红枣去核；3.所有食材放入豆浆机；4.加水打成糊状。"},
+  {name:"黑芝麻糊",category:"糊品",ingredients:"黑芝麻100g+糯米50g+冰糖适量",effect:"补肝肾，益精血，乌发",suit:"须发早白、头晕眼花",caution:"便溏者慎用",recipe:"1.黑芝麻、糯米炒熟；2.放入料理机打成粉；3.锅中加水，放入粉剂；4.小火煮至糊状，加冰糖。"},
+  {name:"桂圆红枣茶",category:"饮品",ingredients:"桂圆10颗+红枣5颗+枸杞10g+红糖适量",effect:"补血养颜，益气安神",suit:"气血不足、失眠健忘",caution:"阴虚火旺者少饮",recipe:"1.桂圆去壳，红枣去核；2.锅中加水，放入食材；3.煮沸后小火煮15分钟；4.加入红糖调味。"},
+  {name:"薏苡仁红豆粥",category:"粥品",ingredients:"薏苡仁30g+红豆30g+大米50g",effect:"健脾利湿，消肿美白",suit:"湿气重、水肿体质",caution:"孕妇慎用",recipe:"1.薏苡仁、红豆提前浸泡4小时；2.大米洗净；3.所有食材放入锅中加水；4.煮至粥稠。"},
+  {name:"冬瓜排骨汤",category:"煲汤",ingredients:"冬瓜300g+排骨200g+薏苡仁30g",effect:"清热利尿，消肿祛湿",suit:"湿热体质、小便不利",caution:"脾胃虚寒者少食",recipe:"1.排骨焯水，冬瓜切块；2.薏苡仁提前浸泡；3.锅中加水，放入所有食材；4.炖至冬瓜软烂。"},
+  {name:"莲子百合粥",category:"粥品",ingredients:"莲子30g+百合30g+大米100g+冰糖适量",effect:"养心安神，润肺止咳",suit:"失眠心悸、肺燥咳嗽",caution:"便溏者少食",recipe:"1.莲子、百合提前浸泡；2.大米洗净；3.所有食材放入锅中；4.煮至粥稠加冰糖。"},
+  {name:"黄芪当归汤",category:"煲汤",ingredients:"黄芪30g+当归10g+鸡肉200g+姜3片",effect:"补气养血，调经止痛",suit:"气血两虚、月经不调",caution:"阴虚火旺者慎用",recipe:"1.鸡肉切块焯水；2.黄芪、当归洗净；3.锅中加水，放入食材；4.炖1小时。"},
+  // 川菜
+  {name:"麻婆豆腐",category:"川菜",ingredients:"豆腐300g+牛肉末50g+郫县豆瓣酱+花椒粉+蒜苗",effect:"温中散寒，健脾开胃",suit:"脾胃虚寒、食欲不振",caution:"痔疮患者少食",recipe:"1.豆腐切块焯水；2.热锅下油炒牛肉末；3.加豆瓣酱炒出红油；4.加高汤、豆腐烧5分钟；5.勾芡撒花椒粉、蒜苗。"},
+  {name:"回锅肉",category:"川菜",ingredients:"五花肉200g+郫县豆瓣酱+青蒜+甜面酱",effect:"补中益气，润燥通便",suit:"体质偏寒者",caution:"高血脂者少食",recipe:"1.五花肉煮熟切片；2.热锅下肉片炒至卷曲；3.加豆瓣酱、甜面酱翻炒；4.加入青蒜段炒匀。"},
+  {name:"鱼香肉丝",category:"川菜",ingredients:"猪里脊200g+木耳+笋+郫县豆瓣酱+醋+糖",effect:"健脾消食，补血养颜",suit:"食欲不振、气血不足",caution:"胃酸过多者少食",recipe:"1.肉切丝腌制；2.木耳、笋切丝焯水；3.调好鱼香汁（醋、糖、酱油）；4.炒肉丝加豆瓣酱，加配菜，淋入汁。"},
+  // 粤菜
+  {name:"清蒸鱼",category:"粤菜",ingredients:"鲈鱼1条+葱丝+姜丝+酱油+热油",effect:"补脾益气，温中开胃",suit:"脾胃虚弱、体质偏寒",caution:"痛风患者适量",recipe:"1.鱼清理干净，两侧切花刀；2.盘底铺姜葱，放上鱼；3.蒸锅水开，放入蒸8分钟；4.倒掉汤汁，铺新葱姜丝，浇热油酱油。"},
+  {name:"白切鸡",category:"粤菜",ingredients:"三黄鸡1只+姜葱蓉+花生油",effect:"温中益气，补虚养血",suit:"气血两虚、体质偏寒",caution:"皮肤病患者慎食",recipe:"1.鸡处理干净；2.锅中水开，放入鸡，三进三出；3.关火焖20分钟；4.捞出冰镇，切块，沾姜葱蓉食用。"},
+  {name:"广式煲汤",category:"粤汤",ingredients:"鸡肉+枸杞+红枣+党参+姜片",effect:"补气养血，健脾益胃",suit:"气血不足、体质虚弱",caution:"感冒发热者慎食",recipe:"1.鸡肉切块焯水；2.所有食材放入砂锅；3.大火烧开，小火炖2小时；4.加盐调味。"},
+  // 浙菜
+  {name:"东坡肉",category:"浙菜",ingredients:"五花肉500g+黄酒+冰糖+酱油+姜葱",effect:"温中补气，润燥通便",suit:"体质偏寒、气血不足",caution:"高血脂者少食",recipe:"1.五花肉切方块，用绳扎紧；2.砂锅底铺姜葱，放肉块；3.加黄酒、酱油、冰糖；4.小火焖3小时至酥烂。"},
+  {name:"西湖醋鱼",category:"浙菜",ingredients:"草鱼1条+醋+糖+酱油+姜末",effect:"补脾开胃，益气养血",suit:"脾胃虚弱、食欲不振",caution:"海鲜过敏者慎食",recipe:"1.草鱼收拾干净，背部切开；2.沸水汆熟装盘；3.锅中调汁（醋、糖、酱油、湿淀粉）；4.浇在鱼身上，撒姜末。"},
+  {name:"龙井虾仁",category:"浙菜",ingredients:"河虾300g+龙井茶+蛋清+淀粉",effect:"补肾壮阳，清热利尿",suit:"肾虚体质、精力不足",caution:"虾过敏者慎食",recipe:"1.虾去壳加蛋清、淀粉上浆；2.龙井茶泡开；3.滑炒虾仁；4.加入茶汤翻炒出锅。"},
+  // 苏菜
+  {name:"清炖狮子头",category:"苏菜",ingredients:"猪肉末300g+马蹄+葱姜+料酒+菜心",effect:"补中益气，润燥通便",suit:"体质虚弱、便秘者",caution:"高血脂者适量",recipe:"1.猪肉末加马蹄碎、葱姜水、淀粉搅拌；2.做成大肉圆；3.砂锅加高汤，放入肉圆；4.小火炖2小时，加菜心。"},
+  {name:"叫化鸡",category:"苏菜",ingredients:"三黄鸡1只+荷叶+黄泥+香料+料酒",effect:"温中益气，补虚强身",suit:"体质偏寒、气血不足",caution:"上火者少食",recipe:"1.鸡用香料、料酒腌制；2.荷叶包紧；3.外裹黄泥；4.炭火烤3小时。"},
+  // 鲁菜
+  {name:"葱爆海参",category:"鲁菜",ingredients:"海参200g+大葱100g+姜蒜+酱油+料酒",effect:"补肾益精，滋阴润燥",suit:"肾虚体质、阴虚火旺",caution:"海鲜过敏者慎食",recipe:"1.海参切条焯水；2.大葱切段；3.热锅下油爆香葱姜；4.放入海参翻炒，加调料。"},
+  {name:"德州扒鸡",category:"鲁菜",ingredients:"鸡1只+香料+酱油+蜂蜜+油",effect:"温中益气，补虚强身",suit:"体质偏寒、气血不足",caution:"肥胖者适量",recipe:"1.鸡用香料腌制；2.过油上色；3.放入卤汤中小火煮2小时；4.捞出装盘。"}
+];
 ];
 
 // ===================== GAME SYSTEM =====================
@@ -785,14 +805,14 @@ function renderRecipes() {
   recipesData.forEach(function(r) {
     var card = document.createElement('div');
     card.className = 'card mrd';
-    card.innerHTML = '<div class="cname">' + r.name + '</div><div class="cpy">🍳 ' + r.ingredients + '</div><div class="cdet"><strong>功效：</strong>' + r.effect + '</div><div class="cdet"><strong>适用：</strong>' + r.suit + '</div>';
+    card.innerHTML = '<div class="cname">' + r.name + '</div><div class="cloc">' + (r.category||'家常菜') + '</div><div class="cpy">🍳 ' + r.ingredients + '</div><div class="cdet"><strong>功效：</strong>' + r.effect + '</div><div class="cdet"><strong>适用：</strong>' + r.suit + '</div><div class="cdet"><strong>做法：</strong>' + (r.recipe||'暂无') + '</div>';
     card.onclick = function(){showRecipeModal(r);};
     grid.appendChild(card);
   });
 }
 
 function showRecipeModal(r) {
-  document.getElementById('mB').innerHTML = '<div class="modal-title">' + r.name + '</div><div class="modal-row"><strong>配方：</strong>' + r.ingredients + '</div><div class="modal-row"><strong>功效：</strong>' + r.effect + '</div><div class="modal-row"><strong>适用人群：</strong>' + r.suit + '</div><div class="modal-row"><strong>注意事项：</strong>' + r.caution + '</div>';
+  document.getElementById('mB').innerHTML = '<div class="modal-title">' + r.name + '</div><div class="modal-row"><strong>菜系：</strong>' + (r.category||'家常菜') + '</div><div class="modal-row"><strong>配方：</strong>' + r.ingredients + '</div><div class="modal-row"><strong>功效：</strong>' + r.effect + '</div><div class="modal-row"><strong>适用人群：</strong>' + r.suit + '</div><div class="modal-row"><strong>注意事项：</strong>' + r.caution + '</div><div class="modal-row"><strong>做法：</strong>' + (r.recipe||'暂无') + '</div>';
   document.getElementById('dMod').classList.add('open');
 }
 
