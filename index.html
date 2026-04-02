@@ -643,7 +643,46 @@ function resetAcupoints() {
 }
 
 function showAcuModal(p) {
-  document.getElementById('mB').innerHTML = '<div class="modal-title">' + p.name + '</div><div class="modal-row"><strong>定位：</strong>' + p.location + '</div><div class="modal-row"><strong>功效：</strong>' + p.effect + '</div><div class="modal-row"><strong>主治：</strong>' + p.indication + '</div><div class="modal-row"><strong>下针手法：</strong>' + p.method + '</div>';
+  // 解析method字段，分离针法和灸法
+  var methodParts = p.method.split('；');
+  var needleMethod = methodParts[0] || p.method;
+  var moxibustionMethod = methodParts[1] || '';
+  
+  // 常见针法说明
+  var needleTypes = '';
+  if (needleMethod.indexOf('直刺') !== -1) needleTypes += '● 直刺：针身与皮肤呈90°垂直刺入，适用于肌肉丰厚处';
+  if (needleMethod.indexOf('斜刺') !== -1) needleTypes += '● 斜刺：针身与皮肤呈45°刺入，适用于骨骼附近或深层穴位';
+  if (needleMethod.indexOf('平刺') !== -1) needleTypes += '● 平刺：针身与皮肤呈15°~25°沿皮刺入，适用于皮肉浅薄处';
+  if (needleMethod.indexOf('点刺') !== -1) needleTypes += '● 点刺：浅刺快速出针，常用于放血疗法';
+  if (needleMethod.indexOf('透刺') !== -1) needleTypes += '● 透刺：一针透两穴，增强刺激效果';
+  
+  // 艾灸方法说明
+  var moxiTypes = '';
+  if (moxibustionMethod.indexOf('灸') !== -1 || p.method.indexOf('可灸') !== -1) {
+    moxiTypes = '<div style="margin-top:6px"><strong>常用灸法：</strong></div>' +
+      '<div style="font-size:0.85em;color:#555;margin-top:4px">' +
+      '● 直接灸：将艾炷直接放在皮肤上施灸，温经散寒效果好<br>' +
+      '● 间接灸：艾灸时隔姜/蒜/盐等介质，保护皮肤兼增强疗效<br>' +
+      '● 温针灸：针刺后留针，将艾绒缠在针柄上燃烧，热力传导至穴位<br>' +
+      '● 艾条灸：手持艾条悬于穴位上方熏烤，适合家庭保健<br>' +
+      '● 温灸器灸：使用灸盒/灸壶等工具，方便安全</div>';
+  }
+  
+  var禁灸提示 = p.method.indexOf('禁灸') !== -1 ? '<div style="color:#c0392b;font-weight:700;margin-top:6px">⚠️ 此穴禁灸</div>' : '';
+  
+  document.getElementById('mB').innerHTML = '<div class="modal-title">' + p.name + '</div>' +
+    '<div class="modal-row"><strong>定位：</strong>' + p.location + '</div>' +
+    '<div class="modal-row"><strong>功效：</strong>' + p.effect + '</div>' +
+    '<div class="modal-row"><strong>主治：</strong>' + p.indication + '</div>' +
+    '<div class="modal-row" style="margin-top:10px;padding:8px;background:rgba(139,58,58,0.06);border-radius:4px">' +
+    '<strong style="color:var(--p)">📌 针刺手法：</strong><div style="font-size:0.85em;margin-top:4px">' + needleMethod + '</div>' +
+    (needleTypes ? '<div style="margin-top:6px"><strong>常用手法：</strong></div><div style="font-size:0.8em;color:#666;margin-top:3px">' + needleTypes + '</div>' : '') +
+    '</div>' +
+    '<div class="modal-row" style="margin-top:10px;padding:8px;background:rgba(212,175,55,0.08);border-radius:4px">' +
+    '<strong style="color:var(--a)">🔥 艾灸方法：</strong>' +禁灸提示 +
+    '<div style="font-size:0.85em;margin-top:4px">' + (moxibustionMethod || (p.method.indexOf('可灸') !== -1 ? '可温和灸或艾条灸' : '不宜艾灸')) + '</div>' +
+    moxiTypes +
+    '</div>';
   document.getElementById('dMod').classList.add('open');
 }
 
