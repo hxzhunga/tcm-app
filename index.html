@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中医学习工具 - 穴位·中药典藏·食物药性·测验</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#8B3A3A;--accent:#D4AF37;--bg:#F5F1E8;--text:#2C2C2C;--light:#E8E4D8;--border:#D4C5B9}
+body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:linear-gradient(135deg,var(--bg) 0%,#FFFBF5 100%);color:var(--text);line-height:1.6;min-height:100vh;padding-bottom:75px}
+.container{max-width:1200px;margin:0 auto;padding:15px}
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:15px;padding:12px;background:linear-gradient(135deg,rgba(139,58,58,0.08),rgba(212,175,55,0.08));border-radius:10px;border:1px solid var(--border)}
+.stats-item{text-align:center}.stats-item .num{font-size:1.4em;color:var(--primary);font-weight:bold}.stats-item .label{font-size:0.75em;color:#888}
+.today-herb{display:flex;align-items:center;gap:15px;padding:15px;background:linear-gradient(135deg,#FFF8E7,#FFFDF5);border:2px solid var(--accent);border-radius:12px;margin-bottom:20px;position:relative;overflow:hidden}
+.today-herb::before{content:"";position:absolute;top:0;left:0;width:5px;height:100%;background:var(--accent)}
+.today-herb .herb-icon{font-size:2.5em;flex-shrink:0}.today-herb .herb-info{flex:1}
+.today-herb .herb-title{color:var(--accent);font-size:0.85em;font-weight:bold;margin-bottom:3px}
+.today-herb .herb-name{font-size:1.2em;color:var(--primary);font-weight:bold}.today-herb .herb-desc{font-size:0.85em;color:#666}
+.today-herb .herb-tag{position:absolute;top:10px;right:10px;background:var(--accent);color:white;padding:3px 10px;border-radius:10px;font-size:0.75em}
+header{text-align:center;padding:20px 15px;border-bottom:3px solid var(--primary);margin-bottom:15px;background:linear-gradient(180deg,rgba(139,58,58,0.05) 0%,transparent 100%)}
+h1{font-size:1.8em;color:var(--primary);margin-bottom:5px;letter-spacing:2px}.subtitle{color:var(--accent);font-size:0.9em}
+.nav-tabs{display:flex;gap:6px;margin-bottom:15px;flex-wrap:wrap;justify-content:center}
+.nav-tabs button{padding:8px 14px;border:2px solid var(--primary);background:white;color:var(--primary);cursor:pointer;font-size:0.85em;border-radius:5px;transition:all 0.3s;font-weight:bold}
+.nav-tabs button.active{background:var(--primary);color:white}.nav-tabs button:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(139,58,58,0.2)}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:white;border-top:2px solid var(--border);z-index:100;padding:8px 0;box-shadow:0 -2px 10px rgba(0,0,0,0.1)}
+.bottom-nav-inner{display:flex;justify-content:space-around;max-width:600px;margin:0 auto}
+.bottom-nav button{flex:1;padding:8px 5px;border:none;background:none;color:#666;cursor:pointer;font-size:0.75em;display:flex;flex-direction:column;align-items:center;gap:3px}
+.bottom-nav button.active{color:var(--primary)}.bottom-nav button .nav-icon{font-size:1.4em}
+@media(max-width:768px){.bottom-nav{display:block}.nav-tabs{flex-direction:column;display:none}}
+.content-section{display:none;animation:fadeIn 0.3s}.content-section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.search-box{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.search-box input,.search-box select{padding:8px 12px;border:2px solid var(--border);border-radius:5px;font-size:0.9em;background:white;flex:1;min-width:140px}
+.search-box button{padding:8px 16px;background:var(--primary);color:white;border:none;border-radius:5px;cursor:pointer;font-weight:bold;transition:all 0.2s}
+.search-box button:hover{background:#6B2A2A;transform:translateY(-1px)}
+.search-suggestions{margin-bottom:10px;font-size:0.85em;color:#888}
+.search-suggestions span{display:inline-block;padding:4px 10px;background:#f0f0f0;border-radius:12px;margin:3px;cursor:pointer}
+.search-suggestions span:hover{background:var(--primary);color:white}
+.meridian-filter{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;justify-content:center}
+.meridian-btn{padding:5px 10px;border:1px solid var(--border);background:white;color:var(--text);cursor:pointer;border-radius:15px;font-size:0.8em;transition:all 0.2s}
+.meridian-btn.active{color:white;border-color:var(--primary)}.meridian-btn:hover{background:rgba(139,58,58,0.1)}
+.acupoint-grid,.medicine-grid,.food-grid,.theory-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:15px;margin-bottom:20px}
+.acupoint-card{background:white;border:2px solid var(--border);border-radius:8px;padding:15px;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden}
+.acupoint-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px}
+.acupoint-card:hover{transform:translateY(-3px);box-shadow:0 6px 15px rgba(0,0,0,0.1)}
+.acupoint-card:active,.medicine-card:active,.food-card:active{transform:scale(0.97)}
+.meridian-weiyang::before{background:#4A90D9}.meridian-yangming::before{background:#E67E22}.meridian-shaoyang::before{background:#9B59B6}.meridian-taiyang::before{background:#E74C3C}.meridian-jueyin::before{background:#E91E63}.meridian-renmai::before{background:#FF69B4}.meridian-dumai::before{background:#4CAF50}.meridian-taiyin::before{background:#8BC34A}.meridian-shaoyin::before{background:#F44336}.meridian-ningque::before{background:#00BCD4}
+.medicine-card{background:white;border:2px solid var(--border);border-radius:8px;padding:15px;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden}
+.medicine-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),#8B6914)}
+.medicine-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 6px 15px rgba(212,175,55,0.15)}
+.food-card{background:#fff;border:2px solid var(--border);border-radius:8px;padding:15px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+.food-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#E65100,#FF9800)}
+.food-card:hover{border-color:#E65100;transform:translateY(-3px);box-shadow:0 6px 15px rgba(230,81,0,0.15)}
+.card-name{font-size:1.1em;font-weight:bold;color:var(--primary);margin-bottom:4px}.card-subtitle{color:var(--accent);font-size:0.8em;margin-bottom:6px;font-weight:bold}
+.card-info{font-size:0.82em;margin-bottom:4px;line-height:1.5}.card-info strong{color:var(--primary)}
+.card-caution{font-size:0.78em;color:#c0392b;background:#ffebee;padding:5px 8px;border-radius:4px;margin-top:8px}
+@keyframes cardPop{0%{transform:scale(1)}50%{transform:scale(0.95)}100%{transform:scale(1)}}.card-pop{animation:cardPop 0.2s ease}
+.theory-card{background:white;border:2px solid var(--border);border-radius:10px;padding:18px;transition:all 0.3s;cursor:pointer}
+.theory-card:hover{border-color:var(--primary);box-shadow:0 4px 12px rgba(139,58,58,0.1)}
+.theory-card h3{color:var(--primary);font-size:1.1em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--light);display:flex;justify-content:space-between;align-items:center}
+.theory-card p{font-size:0.88em;line-height:1.7;color:#555;margin-bottom:8px}
+.theory-card .theory-detail{display:none}.theory-card.expanded .theory-detail{display:block}
+.toggle-icon{font-size:0.8em;color:#888;transition:transform 0.3s}.theory-card.expanded .toggle-icon{transform:rotate(180deg)}
+.sub-item{margin:10px 0;padding-left:15px;border-left:3px solid var(--accent)}
+.quiz-container{background:white;border:2px solid var(--border);border-radius:8px;padding:20px;max-width:750px;margin:0 auto}
+.streak-display{text-align:center;margin-bottom:10px;min-height:32px}
+.streak-fire{font-size:1.4em;animation:pulse 1s infinite;display:inline}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}.streak-text{color:#e74c3c;font-weight:bold;font-size:1em;display:inline;margin-left:5px}
+@keyframes goldCelebrate{0%{transform:scale(0);opacity:0}50%{transform:scale(1.3);opacity:1}70%{transform:scale(0.9)}100%{transform:scale(1);opacity:1}}
+.gold-celebration{animation:goldCelebrate 1.5s ease;background:linear-gradient(135deg,#FFD700,#FFA500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:1.5em;font-weight:bold;display:block;text-align:center;margin:15px 0}
+.quiz-progress{margin-bottom:12px;background:var(--light);border-radius:8px;overflow:hidden;height:28px;position:relative}
+.quiz-progress-bar{height:100%;transition:width 0.4s ease;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:0.85em;min-width:50px}
+.quiz-progress-bar.green-flash{animation:greenFlash 0.5s}.quiz-progress-bar.red-flash{animation:redFlash 0.5s}
+@keyframes greenFlash{0%,100%{background:linear-gradient(90deg,var(--primary),var(--accent))}50%{background:#27ae60}}
+@keyframes redFlash{0%,100%{background:linear-gradient(90deg,var(--primary),var(--accent))}50%{background:#c0392b}}
+.quiz-question{margin-bottom:15px}.quiz-question h3{color:var(--primary);margin-bottom:10px;font-size:1em;line-height:1.6}
+.quiz-options{display:flex;flex-direction:column;gap:8px}
+.quiz-option{padding:10px 12px;border:2px solid var(--border);background:white;cursor:pointer;border-radius:5px;transition:all 0.3s;display:flex;align-items:center}
+.quiz-option:hover{border-color:var(--primary);background:rgba(139,58,58,0.05)}.quiz-option input[type="radio"]{margin-right:8px;accent-color:var(--primary)}
+.quiz-buttons{display:flex;gap:10px;margin-top:15px;justify-content:center}
+.quiz-buttons button{padding:10px 20px;border:none;border-radius:5px;cursor:pointer;font-weight:bold;transition:all 0.2s}
+.btn-submit{background:var(--primary);color:white}.btn-submit:hover{background:#6B2A2A}
+.btn-reset{background:var(--light);color:var(--text);border:2px solid var(--border)}.btn-reset:hover{background:var(--border)}
+.quiz-result{background:linear-gradient(135deg,rgba(139,58,58,0.1),rgba(212,175,55,0.1));border:2px solid var(--primary);border-radius:8px;padding:18px;margin-top:15px;text-align:center}
+.result-score{font-size:1.8em;color:var(--primary);font-weight:bold;margin-bottom:8px}.result-message{color:var(--text);font-size:1.05em}
+.rank-display{text-align:center;margin:10px 0;font-size:1.1em}
+.rank-badge{display:inline-block;padding:5px 20px;background:linear-gradient(135deg,var(--accent),#B8860B);color:white;border-radius:20px;font-weight:bold}
+.explanation{background:#FFF3E0;border-left:3px solid #FF9800;padding:10px;margin-top:10px;border-radius:4px;display:none}.explanation.show{display:block}
+.wrong-list{background:#FFEBEE;border-radius:8px;padding:15px;margin-top:15px}
+.wrong-item{padding:8px;margin:8px 0;background:#fff;border-radius:4px;border-left:3px solid #c62828}
+.diagnosis-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:15px;margin-bottom:20px}
+.diagnosis-card{background:white;border:2px solid var(--border);border-radius:8px;padding:15px;cursor:pointer;transition:all 0.3s}
+.diagnosis-card:hover{border-color:var(--primary);transform:translateY(-2px)}
+.health-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:15px}
+.health-card{background:white;border:2px solid var(--border);border-radius:8px;padding:15px;transition:all 0.3s}
+.health-card:hover{border-color:var(--accent)}
+.modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.5)}
+.modal.open{display:flex;align-items:center;justify-content:center}
+.modal-content{background:white;padding:25px;border-radius:10px;max-width:550px;max-height:80vh;overflow-y:auto;margin:20px;border-top:5px solid var(--primary);animation:modalPop 0.3s}
+@keyframes modalPop{from{transform:scale(0.8);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-close{float:right;font-size:1.4em;cursor:pointer;color:var(--text);padding:5px;line-height:1}.modal-close:hover{color:var(--primary)}
+.modal-title{color:var(--primary);font-size:1.2em;margin-bottom:15px;border-bottom:1px solid var(--border);padding-bottom:10px}
+.modal-body{line-height:1.8;font-size:0.92em}.modal-body strong{color:var(--primary)}
+.modal-tip{background:#E8F5E9;border-radius:8px;padding:12px;margin-top:12px;border-left:4px solid #4CAF50}.modal-tip::before{content:"💡 "}
+.no-results{text-align:center;padding:30px 20px;color:#999;font-size:1em}
+.no-results .related-search{margin-top:15px}
+.related-search-item{display:inline-block;padding:6px 12px;background:#f0f0f0;border-radius:15px;margin:5px;cursor:pointer;font-size:0.9em}.related-search-item:hover{background:var(--primary);color:white}
+.fun-fact-modal .modal-content{border-top-color:var(--accent)}
+.meridian-diagram{background:linear-gradient(180deg,#fdfbf7,#f5f1e8);border-radius:10px;padding:20px;margin-bottom:20px;text-align:center}
+.meridian-diagram h3{color:var(--primary);margin-bottom:15px}
+.meridian-lines{display:flex;flex-wrap:wrap;gap:15px;justify-content:center}
+.meridian-line{display:flex;align-items:center;gap:8px;padding:8px 15px;background:white;border-radius:20px;border:2px solid}
+.meridian-line .dot{width:15px;height:15px;border-radius:50%}.meridian-line .name{font-size:0.85em;font-weight:bold}
+.result-stats{text-align:center;margin-bottom:10px;color:#888;font-size:0.9em}
+@media(max-width:768px){
+h1{font-size:1.5em}.acupoint-grid,.medicine-grid,.food-grid,.theory-grid{grid-template-columns:1fr}
+.stats-bar{grid-template-columns:repeat(2,1fr)}.today-herb{flex-direction:column;text-align:center}
+.quiz-container{padding:15px}.modal-content{margin:10px;padding:18px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="stats-bar">
+<div class="stats-item"><div class="num" id="todayCount">0</div><div class="label">今日答题</div></div>
+<div class="stats-item"><div class="num" id="todayAccuracy">0%</div><div class="label">正确率</div></div>
+<div class="stats-item"><div class="num" id="herbsLearned">0</div><div class="label">已学药材</div></div>
+<div class="stats-item"><div class="num" id="streakCount">0</div><div class="label">连续答对</div></div>
+</div>
+<div class="today-herb" id="todayHerb"></div>
+<header><h1>中医学习工具</h1><p class="subtitle">穴位·中药典藏·食物药性·测验·问答</p></header>
+<nav class="nav-tabs">
+<button class="active" onclick="showSection("theory")">📚 理论基础</button>
+<button onclick="showSection("herbs")">🌿 中药典藏</button>
+<button onclick="showSection("foods")">🍎 食物药性</button>
+<button onclick="showSection("acupoints")">💉 针灸穴位</button>
+<button onclick="showSection("diagnosis")">🔍 诊断方法</button>
+<button onclick="showSection("health")">🧘 养生保健</button>
+<button onclick="showSection("quiz")">🎯 知识测验</button>
+</nav>
+<section id="theory" class="content-section active"><div class="theory-grid" id="theoryContent"></div></section>
+<section id="herbs" class="content-section">
+<div class="search-box">
+<input type="text" id="herbSearch" placeholder="搜索中药（名称、功效、主治）" oninput="filterHerbs()">
+<select id="herbCatFilter" onchange="filterHerbs()"><option value="">所有分类</option><option value="补气药">补气药</option><option value="补血药">补血药</option><option value="补阳药">补阳药</option><option value="补阴药">补阴药</option><option value="解表药">解表药</option><option value="清热药">清热药</option><option value="温里药">温里药</option><option value="理气药">理气药</option><option value="活血化瘀药">活血化瘀药</option><option value="化痰止咳药">化痰止咳药</option><option value="利水渗湿药">利水渗湿药</option><option value="安神药">安神药</option><option value="消食药">消食药</option><option value="收涩药">收涩药</option></select>
+</div>
+<div class="search-suggestions" id="herbSuggestions"></div>
+<div class="result-stats" id="herbStats"></div>
+<div class="medicine-grid" id="herbGrid"></div>
+<div class="no-results" id="herbNoResults" style="display:none"><p>未找到相关中药</p><div class="related-search" id="herbRelated"></div></div>
+</section>
+<section id="foods" class="content-section">
+<div class="search-box">
+<input type="text" id="foodSearch" placeholder="搜索食物（名称、功效）" oninput="filterFoods()">
+<select id="foodCatFilter" onchange="filterFoods()"><option value="">所有分类</option><option value="蔬菜类">蔬菜类</option><option value="水果类">水果类</option><option value="粮豆类">粮豆类</option><option value="肉蛋类">肉蛋类</option><option value="调味类">调味类</option></select>
+</div>
+<div class="search-suggestions" id="foodSuggestions"></div>
+<div class="result-stats" id="foodStats"></div>
+<div class="food-grid" id="foodGrid"></div>
+<div class="no-results" id="foodNoResults" style="display:none"><p>未找到相关食物</p><div class="related-search" id="foodRelated"></div></div>
+</section>
+<section id="acupoints" class="content-section">
+<div class="meridian-diagram"><h3>🗺️ 经络颜色图例</h3>
+<div class="meridian-lines">
+<div class="meridian-line" style="border-color:#4A90D9"><div class="dot" style="background:#4A90D9"></div><span class="name">膀胱经</span></div>
+<div class="meridian-line" style="border-color:#E67E22"><div class="dot" style="background:#E67E22"></div><span class="name">胃经</span></div>
+<div class="meridian-line" style="border-color:#9B59B6"><div class="dot" style="background:#9B59B6"></div><span class="name">胆经</span></div>
+<div class="meridian-line" style="border-color:#E74C3C"><div class="dot" style="background:#E74C3C"></div><span class="name">小肠经</span></div>
+<div class="meridian-line" style="border-color:#E91E63"><div class="dot" style="background:#E91E63"></div><span class="name">心包经</span></div>
+<div class="meridian-line" style="border-color:#4CAF50"><div class="dot" style="background:#4CAF50"></div><span class="name">督脉</span></div>
+<div class="meridian-line" style="border-color:#8BC34A"><div class="dot" style="background:#8BC34A"></div><span class="name">脾经</span></div>
+<div class="meridian-line" style="border-color:#F44336"><div class="dot" style="background:#F44336"></div><span class="name">心经</span></div>
+<div class="meridian-line" style="border-color:#00BCD4"><div class="dot" style="background:#00BCD4"></div><span class="name">肺经</span></div>
+<div class="meridian-line" style="border-color:#FF69B4"><div class="dot" style="background:#FF69B4"></div><span class="name">任脉</span></div>
+</div>
+</div>
+<div class="search-box">
+<input type="text" id="acuSearch" placeholder="搜索穴位" oninput="filterAcupoints()">
+<select id="acuChannelFilter" onchange="filterAcupoints()"><option value="">所有经络</option></select>
+</div>
+<div class="result-stats" id="acuStats"></div>
+<div class="acupoint-grid" id="acuGrid"></div>
+</section>
+<section id="diagnosis" class="content-section">
+<div class="diagnosis-grid">
+<div class="diagnosis-card" onclick="showDiagnosisDetail("望诊")"><h3 style="color:var(--primary);margin-bottom:8px">👁️ 望诊</h3><p>观察神、色、形、态，包括望神、望面色、望形态、望舌等。舌诊是中医重要诊断方法。</p><div style="margin-top:10px;font-size:0.85em;color:#888">点击查看详细内容 →</div></div>
+<div class="diagnosis-card" onclick="showDiagnosisDetail("闻诊")"><h3 style="color:var(--primary);margin-bottom:8px">👂 闻诊</h3><p>听声音和嗅气味。听语言、呼吸、咳嗽等声音变化；嗅口气、分泌物等气味。</p><div style="margin-top:10px;font-size:0.85em;color:#888">点击查看详细内容 →</div></div>
+<div class="diagnosis-card" onclick="showDiagnosisDetail("问诊")"><h3 style="color:var(--primary);margin-bottom:8px">💬 问诊</h3><p>询问病史和症状。"十问歌"：一问寒热二问汗，三问头身四问便...</p><div style="margin-top:10px;font-size:0.85em;color:#888">点击查看详细内容 →</div></div>
+<div class="diagnosis-card" onclick="showDiagnosisDetail("切诊")"><h3 style="color:var(--primary);margin-bottom:8px">✋ 切诊</h3><p>脉诊和按诊。脉诊分浮、沉、迟、数、虚、实等；按诊包括按压胸腹、肌肤等。</p><div style="margin-top:10px;font-size:0.85em;color:#888">点击查看详细内容 →</div></div>
+</div>
+</section>
+<section id="health" class="content-section">
+<div class="health-grid">
+<div class="health-card"><h3 style="color:var(--primary);margin-bottom:10px">🌸 四季养生</h3><p><strong>春养肝</strong>：宜疏肝理气，多食绿色蔬菜</p><p><strong>夏养心</strong>：宜清热养心，少食辛辣油腻</p><p><strong>长夏养脾</strong>：宜健脾祛湿，少食生冷</p><p><strong>秋养肺</strong>：宜润肺生津，多食白色食物</p><p><strong>冬养肾</strong>：宜温补肾阳，多食黑色食物</p></div>
+<div class="health-card"><h3 style="color:var(--accent);margin-bottom:10px">🍵 食疗药膳</h3><p><strong>药食同源</strong>：食物也有四气五味，根据体质选择适宜食物</p><p><strong>食疗原则</strong>：同气相求，以形补形，因时制宜</p><p><strong>常用药膳</strong>：四神汤、八珍糕、桂圆红枣茶</p></div>
+<div class="health-card"><h3 style="color:var(--primary);margin-bottom:10px">🧬 体质辨识</h3><p><strong>九种体质</strong>：平和质、气虚质、阳虚质、阴虚质、痰湿质、湿热质、血瘀质、气郁质、特禀质</p><p><strong>自测方法</strong>：观察自己的形体、面色、舌苔、二便、情志等特征</p></div>
+<div class="health-card"><h3 style="color:var(--accent);margin-bottom:10px">😴 起居养生</h3><p><strong>作息规律</strong>：早睡早起，顺应日出而作、日落而息</p><p><strong>睡眠时间</strong>：子时（23-1点）入睡，卯时（5-7点）起床</p><p><strong>情志调养</strong>：恬淡虚无，精神内守</p></div>
+</div>
+</section>
+<section id="quiz" class="content-section">
+<div class="quiz-container">
+<div class="streak-display" id="streakDisplay"></div>
+<div class="quiz-progress"><div class="quiz-progress-bar" id="quizProgress">0/60</div></div>
+<div class="rank-display" id="rankDisplay"></div>
+<div id="quizContent">
+<div class="quiz-question"><h3 id="quizQuestion"></h3></div>
+<div class="quiz-options" id="quizOptions"></div>
+<div class="explanation" id="quizExplanation"></div>
+</div>
+<div class="quiz-buttons">
+<button class="btn-submit" id="quizSubmit" onclick="submitAnswer()">提交答案</button>
+<button class="btn-reset" id="quizNext" onclick="nextQuestion()" style="display:none">下一题</button>
+<button class="btn-reset" onclick="resetQuiz()">重新开始</button>
+</div>
+<div id="quizResult" style="display:none"></div>
+<div id="wrongList" style="display:none"></div>
+</div>
+</section>
+</div>
+<nav class="bottom-nav">
+<div class="bottom-nav-inner">
+<button onclick="showSection("theory")" data-section="theory"><span class="nav-icon">📚</span><span>理论</span></button>
+<button onclick="showSection("herbs")" data-section="herbs"><span class="nav-icon">🌿</span><span>中药</span></button>
+<button onclick="showSection("foods")" data-section="foods"><span class="nav-icon">🍎</span><span>食物</span></button>
+<button onclick="showSection("acupoints")" data-section="acupoints"><span class="nav-icon">💉</span><span>穴位</span></button>
+<button onclick="showSection("quiz")" data-section="quiz"><span class="nav-icon">🎯</span><span>测验</span></button>
+</div>
+</nav>
+<div class="modal" id="infoModal"><div class="modal-content"><span class="modal-close" onclick="closeModal()">×</span><div class="modal-title" id="modalTitle"></div><div class="modal-body" id="modalBody"></div></div></div>
+<div class="modal fun-fact-modal" id="funFactModal"><div class="modal-content"><span class="modal-close" onclick="closeFunFact()">×</span><div class="modal-title" id="funFactTitle"></div><div class="modal-body" id="funFactBody"></div></div></div>
+<script>
+var learningStats={todayAnswered:0,todayCorrect:0,herbsViewed:new Set(),currentStreak:0,maxStreak:0};
+function updateStatsBar(){document.getElementById("todayCount").textContent=learningStats.todayAnswered;var acc=learningStats.todayAnswered>0?Math.round(learningStats.todayCorrect/learningStats.todayAnswered*100):0;document.getElementById("todayAccuracy").textContent=acc+"%";document.getElementById("herbsLearned").textContent=learningStats.herbsViewed.size;document.getElementById("streakCount").textContent=learningStats.currentStreak}
