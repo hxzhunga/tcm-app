@@ -661,7 +661,58 @@ function toggleFav(e, id) {
   checkAchievements('favorite_3');
   if (document.getElementById('aG')) renderAcupointsFlat();
   if (document.getElementById('meG')) renderMedicines(herbsFull);
+  if (document.getElementById('fG')) renderFoods();
 }
+
+// ===================== FOODS (现代食物) =====================
+function renderFoods() {
+  var grid = document.getElementById('fG');
+  if (!grid) return;
+  grid.innerHTML = '';
+  var foods = herbsFull.filter(function(h) {
+    return ['蔬菜','水果','肉食','蛋奶','饮品','食材','油脂'].indexOf(h.category) !== -1;
+  });
+  foods.forEach(function(h) {
+    var card = document.createElement('div');
+    card.className = 'card mrd';
+    var isFav = gameState.favorites.indexOf('food_' + h.name) !== -1;
+    var natureEmoji = h.nature === '寒' ? '❄️' : h.nature === '凉' ? '🌥️' : h.nature === '温' ? '☀️' : h.nature === '热' ? '🔥' : '⚖️';
+    card.innerHTML = '<button class="fn ' + (isFav?'hi':'') + '" onclick="toggleFav(event, \'food_' + h.name + '\')">' + (isFav?'❤️':'🤍') + '</button><div class="cname">' + h.name + '</div><div class="cpy">' + natureEmoji + ' ' + h.nature + ' | ' + h.category + '</div><div class="cdet"><strong>功效：</strong>' + h.effect + '</div>';
+    card.onclick = function(){showFoodModal(h);};
+    grid.appendChild(card);
+  });
+  document.getElementById('fN').style.display = foods.length ? 'none' : 'block';
+}
+
+function searchFoods() {
+  var kw = document.getElementById('fS').value.trim().toLowerCase();
+  var grid = document.getElementById('fG');
+  if (!grid) return;
+  grid.innerHTML = '';
+  var foods = herbsFull.filter(function(h) {
+    var isFood = ['蔬菜','水果','肉食','蛋奶','饮品','食材','油脂'].indexOf(h.category) !== -1;
+    var match = !kw || h.name.toLowerCase().indexOf(kw) !== -1 || h.effect.toLowerCase().indexOf(kw) !== -1;
+    return isFood && match;
+  });
+  foods.forEach(function(h) {
+    var card = document.createElement('div');
+    card.className = 'card mrd';
+    var isFav = gameState.favorites.indexOf('food_' + h.name) !== -1;
+    var natureEmoji = h.nature === '寒' ? '❄️' : h.nature === '凉' ? '🌥️' : h.nature === '温' ? '☀️' : h.nature === '热' ? '🔥' : '⚖️';
+    card.innerHTML = '<button class="fn ' + (isFav?'hi':'') + '" onclick="toggleFav(event, \'food_' + h.name + '\')">' + (isFav?'❤️':'🤍') + '</button><div class="cname">' + h.name + '</div><div class="cpy">' + natureEmoji + ' ' + h.nature + ' | ' + h.category + '</div><div class="cdet"><strong>功效：</strong>' + h.effect + '</div>';
+    card.onclick = function(){showFoodModal(h);};
+    grid.appendChild(card);
+  });
+  document.getElementById('fN').style.display = foods.length ? 'none' : 'block';
+}
+
+function showFoodModal(h) {
+  var natureTip = h.nature === '寒' ? '体质虚寒者不宜多食' : h.nature === '凉' ? '脾胃虚寒者适量' : h.nature === '温' ? '阴虚火旺者少食' : h.nature === '热' ? '热性体质者慎食' : '大多数人可食用';
+  document.getElementById('mB').innerHTML = '<div class="modal-title">' + h.name + '</div><div class="modal-row"><strong>分类：</strong>' + h.category + '</div><div class="modal-row"><strong>药性：</strong>' + h.nature + ' <span style="font-size:0.8em;color:#888">(' + natureTip + ')</span></div><div class="modal-row"><strong>药味：</strong>' + h.taste + '</div><div class="modal-row"><strong>归经：</strong>' + h.meridian + '</div><div class="modal-row"><strong>功效：</strong>' + h.effect + '</div><div class="modal-row"><strong>适用：</strong>' + h.indication + '</div><div class="modal-row"><strong>注意：</strong>' + h.caution + '</div>';
+  document.getElementById('dMod').classList.add('open');
+}
+
+function sF() { searchFoods(); }
 
 // ===================== MEDICINES =====================
 function renderMedicines(arr) {
@@ -798,8 +849,7 @@ function showResult() {
   document.getElementById('rM2').textContent = msg;
 }
 
-function resetQuiz() { initQuiz();
-renderFoods(foodsData); }
+function resetQuiz() { initQuiz(); }
 
 // ===================== QA =====================
 function buildQA() {
@@ -902,7 +952,7 @@ buildMeridianFilter();
 renderAcupointsFlat();
 renderMedicines(herbsFull);
 initQuiz();
-renderFoods(foodsData);
+renderFoods();
 buildQA();
 renderAchievements();
 setDaily();
