@@ -121,6 +121,7 @@ h1{font-size:1.4em;color:var(--p)}
 <button data-t="acupoints">穴位</button>
 <button data-t="medicines">中药</button>
 <button data-t="foods">🍎食物</button>
+<button data-t="recipes">🍲药膳</button>
 <button data-t="quiz">测验</button>
 <button data-t="qa">问答</button>
 <button data-t="achieve">🏆成就</button>
@@ -149,6 +150,10 @@ h1{font-size:1.4em;color:var(--p)}
 <div class="sbox"><input id="fS" placeholder="搜索食物名称或功效..." oninput="sF()"></div>
 <div class="grid" id="fG"></div>
 <div class="nf" id="fN">未找到匹配食物</div>
+</div>
+
+<div id="recipes" class="sec">
+<div class="grid" id="rG"></div>
 </div>
 
 <div id="quiz" class="sec">
@@ -408,6 +413,25 @@ const foodsData = [
 {"name":"红枣","category":"果部","pinyin":"hong zao","nature":"温","taste":"甘","meridian":"脾、胃","effect":"补中益气，养血安神","indication":"脾虚食少、贫血、失眠","caution":"湿热内盛者不宜多食"},
 {"name":"小米","category":"粮食","pinyin":"xiao mi","nature":"凉","taste":"甘、咸","meridian":"脾、胃","effect":"健脾益胃，养心安神","indication":"脾虚便溏、失眠","caution":"脾虚泄泻者不宜多食"},
 {"name":"大米","category":"粮食","pinyin":"da mi","nature":"平","taste":"甘","meridian":"脾、胃","effect":"补中益气，健脾和胃","indication":"脾虚食少、虚弱","caution":"糖尿病患者不宜多食"}
+];
+
+// 药膳食谱
+var recipesData = [
+  {name:"番茄炒蛋",ingredients:"番茄+鸡蛋",effect:"清热养阴，健脾开胃",suit:"体质偏热、食欲不振者",caution:"胃寒者少食"},
+  {name:"西兰花炒肉",ingredients:"西兰花+猪肉",effect:"清热利湿，补中益气",suit:"湿热体质、脾虚者",caution:"猪肉不宜与乌梅同食"},
+  {name:"红枣枸杞鸡汤",ingredients:"红枣+枸杞+鸡肉",effect:"温补气血，养肝明目",suit:"气血两虚、视力疲劳者",caution:"感冒发热者慎食"},
+  {name:"山药排骨汤",ingredients:"山药+排骨",effect:"健脾益气，补肾养血",suit:"脾肾两虚、体弱者",caution:"便秘者少食"},
+  {name:"绿豆百合粥",ingredients:"绿豆+百合+大米",effect:"清热解毒，养阴润肺",suit:"阴虚火旺、肺热咳嗽",caution:"体质虚寒者少食"},
+  {name:"生姜红糖水",ingredients:"生姜+红糖",effect:"温中散寒，补血活血",suit:"风寒感冒、胃寒腹痛",caution:"热性体质者少食"},
+  {name:"香蕉牛奶",ingredients:"香蕉+牛奶",effect:"清热润肠，滋养脾胃",suit:"便秘、阴虚体质",caution:"脾胃虚寒者少食"},
+  {name:"洋葱炒牛肉",ingredients:"洋葱+牛肉",effect:"温中散寒，补中益气",suit:"阳虚体质、寒性腹痛",caution:"热病患者慎食"},
+  {name:"核桃红枣糊",ingredients:"核桃+红枣",effect:"补肾温肺，养血安神",suit:"肾虚失眠、气血不足",caution:"便溏者慎用"},
+  {name:"黑芝麻糊",ingredients:"黑芝麻+糯米",effect:"补肝肾，益精血，乌发",suit:"须发早白、头晕眼花",caution:"便溏者慎用"},
+  {name:"桂圆红枣茶",ingredients:"桂圆+红枣+枸杞",effect:"补血养颜，益气安神",suit:"气血不足、失眠健忘",caution:"阴虚火旺者少饮"},
+  {name:"薏苡仁红豆粥",ingredients:"薏苡仁+红豆",effect:"健脾利湿，消肿美白",suit:"湿气重、水肿体质",caution:"孕妇慎用"},
+  {name:"冬瓜排骨汤",ingredients:"冬瓜+排骨",effect:"清热利尿，消肿祛湿",suit:"湿热体质、小便不利",caution:"脾胃虚寒者少食"},
+  {name:"莲子百合粥",ingredients:"莲子+百合+大米",effect:"养心安神，润肺止咳",suit:"失眠心悸、肺燥咳嗽",caution:"便溏者少食"},
+  {name:"黄芪当归汤",ingredients:"黄芪+当归",effect:"补气养血，调经止痛",suit:"气血两虚、月经不调",caution:"阴虚火旺者慎用"}
 ];
 
 // ===================== GAME SYSTEM =====================
@@ -753,6 +777,25 @@ function showFoodModal(h) {
 
 function sF() { searchFoods(); }
 
+// ===================== RECIPES (药膳) =====================
+function renderRecipes() {
+  var grid = document.getElementById('rG');
+  if (!grid) return;
+  grid.innerHTML = '';
+  recipesData.forEach(function(r) {
+    var card = document.createElement('div');
+    card.className = 'card mrd';
+    card.innerHTML = '<div class="cname">' + r.name + '</div><div class="cpy">🍳 ' + r.ingredients + '</div><div class="cdet"><strong>功效：</strong>' + r.effect + '</div><div class="cdet"><strong>适用：</strong>' + r.suit + '</div>';
+    card.onclick = function(){showRecipeModal(r);};
+    grid.appendChild(card);
+  });
+}
+
+function showRecipeModal(r) {
+  document.getElementById('mB').innerHTML = '<div class="modal-title">' + r.name + '</div><div class="modal-row"><strong>配方：</strong>' + r.ingredients + '</div><div class="modal-row"><strong>功效：</strong>' + r.effect + '</div><div class="modal-row"><strong>适用人群：</strong>' + r.suit + '</div><div class="modal-row"><strong>注意事项：</strong>' + r.caution + '</div>';
+  document.getElementById('dMod').classList.add('open');
+}
+
 // ===================== MEDICINES =====================
 function renderMedicines(arr) {
   var grid = document.getElementById('meG');
@@ -992,6 +1035,7 @@ renderAcupointsFlat();
 renderMedicines(herbsFull);
 initQuiz();
 renderFoods();
+renderRecipes();
 buildQA();
 renderAchievements();
 setDaily();
