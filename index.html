@@ -249,20 +249,20 @@ function addScore(pts, msg) {
 }
 
 function updateGameUI() {
-  var el = document.getElementById('scoreDisplay');
+  var el = document.getElementById('sD');
   if (el) el.textContent = gameState.score;
-  var el2 = document.getElementById('levelDisplay');
+  var el2 = document.getElementById('lD');
   if (el2) el2.textContent = gameState.levelName;
-  var el3 = document.getElementById('achCount');
+  var el3 = document.getElementById('aC');
   if (el3) el3.textContent = Object.keys(gameState.achievements).length;
-  var el4 = document.getElementById('quizDone');
+  var el4 = document.getElementById('qD');
   if (el4) el4.textContent = gameState.quizAnswered;
-  var el5 = document.getElementById('homeQuizCount');
+  var el5 = document.getElementById('hQC');
   if (el5) el5.textContent = gameState.quizAnswered;
   var acc = gameState.quizAnswered > 0 ? Math.round(gameState.quizCorrect/gameState.quizAnswered*100) : 0;
-  var el6 = document.getElementById('homeAccuracy');
+  var el6 = document.getElementById('hAcc');
   if (el6) el6.textContent = acc + '%';
-  var el7 = document.getElementById('levelProgress');
+  var el7 = document.getElementById('lP');
   if (el7) {
     var next = levelThresholds[gameState.level] || levelThresholds[levelThresholds.length-1];
     var curr = levelThresholds[gameState.level-1] || 0;
@@ -312,12 +312,12 @@ function checkAchievements(id) {
 }
 
 function showScorePopup(pts) {
-  var pop = document.getElementById('scorePopup');
-  var num = document.getElementById('scorePopupNum');
+  var pop = document.getElementById('sPop');
+  var num = document.getElementById('sPn');
   if (pop && num) {
     num.textContent = '+' + pts;
-    pop.classList.add('show');
-    setTimeout(function(){pop.classList.remove('show');}, 1000);
+    pop.classList.add('sh');
+    setTimeout(function(){pop.classList.remove('sh');}, 1000);
   }
 }
 
@@ -325,22 +325,22 @@ function showToast(msg) {
   var t = document.getElementById('toast');
   if (t) {
     t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(function(){t.classList.remove('show');}, 3000);
+    t.classList.add('sh');
+    setTimeout(function(){t.classList.remove('sh');}, 3000);
   }
 }
 
 // ===================== TABS =====================
-document.querySelectorAll('.tab-btn').forEach(function(btn) {
+document.querySelectorAll('.tabs button').forEach(function(btn) {
   btn.addEventListener('click', function() {
-    document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
-    document.querySelectorAll('.content-section').forEach(function(s){s.classList.remove('active');});
+    document.querySelectorAll('.tabs button').forEach(function(b){b.classList.remove('active');});
+    document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('active');});
     btn.classList.add('active');
-    var tab = document.getElementById(btn.dataset.tab);
+    var tab = document.getElementById(btn.dataset.t);
     if (tab) tab.classList.add('active');
-    if (btn.dataset.tab === 'acupoints') { gameState.visitedAcupoints = true; checkAchievements('browse_acupoints'); }
-    if (btn.dataset.tab === 'medicines') { gameState.visitedHerbs = true; checkAchievements('browse_herbs'); }
-    if (btn.dataset.tab === 'qa') { gameState.visitedQA = true; checkAchievements('browse_qa'); }
+    if (btn.dataset.t === 'acupoints') { gameState.visitedAcupoints = true; checkAchievements('browse_acupoints'); }
+    if (btn.dataset.t === 'medicines') { gameState.visitedHerbs = true; checkAchievements('browse_herbs'); }
+    if (btn.dataset.t === 'qa') { gameState.visitedQA = true; checkAchievements('browse_qa'); }
     saveGame();
   });
 });
@@ -349,19 +349,19 @@ document.querySelectorAll('.tab-btn').forEach(function(btn) {
 var activeMeridian = '';
 
 function buildMeridianFilter() {
-  var sel = document.getElementById('meridianSelect');
-  var fil = document.getElementById('meridianFilter');
+  var sel = document.getElementById('mS');
+  var fil = document.getElementById('mF');
   if (!sel || !fil) return;
   Object.keys(acupointsFull).forEach(function(m) {
     var opt = document.createElement('option');
     opt.value = m; opt.textContent = m;
     sel.appendChild(opt);
     var btn = document.createElement('button');
-    btn.className = 'meridian-btn';
+    btn.className = 'mb';
     btn.textContent = m;
     btn.onclick = function() {
       activeMeridian = (activeMeridian === m) ? '' : m;
-      document.querySelectorAll('.meridian-btn').forEach(function(b){b.classList.remove('active');});
+      document.querySelectorAll('.mb').forEach(function(b){b.classList.remove('active');});
       if (activeMeridian) btn.classList.add('active');
       sel.value = activeMeridian;
       renderAcupointsFlat();
@@ -371,26 +371,26 @@ function buildMeridianFilter() {
 }
 
 function renderAcupointsFlat() {
-  var grid = document.getElementById('acupointGrid');
+  var grid = document.getElementById('aG');
   if (!grid) return;
   grid.innerHTML = '';
   var pts = activeMeridian ? acupointsFull[activeMeridian] : Object.values(acupointsFull).flat();
   pts.forEach(function(p) {
     var card = document.createElement('div');
-    card.className = 'acupoint-card';
+    card.className = 'card';
     var isFav = gameState.favorites.indexOf('acu_' + p.name) !== -1;
-    card.innerHTML = '<button class="fav-btn ' + (isFav?'active':'') + '" onclick="toggleFav(event, \'acu_' + p.name + '\')">' + (isFav?'❤️':'🤍') + '</button><div class="acupoint-name">' + p.name + '</div><div class="acupoint-meridian">' + p.location + '</div><div class="acupoint-detail"><strong>功效：</strong>' + p.effect + '</div><div class="acupoint-detail"><strong>主治：</strong>' + p.indication + '</div>';
+    card.innerHTML = '<button class="fn ' + (isFav?'hi':'') + '" onclick="toggleFav(event, \'acu_' + p.name + '\')">' + (isFav?'❤️':'🤍') + '</button><div class="cname">' + p.name + '</div><div class="cloc">' + p.location + '</div><div class="cdet"><strong>功效：</strong>' + p.effect + '</div><div class="cdet"><strong>主治：</strong>' + p.indication + '</div>';
     card.onclick = function(){showAcuModal(p);};
     grid.appendChild(card);
   });
-  document.getElementById('acupointNoResults').style.display = pts.length ? 'none' : 'block';
+  document.getElementById('aN').style.display = pts.length ? 'none' : 'block';
 }
 
 function searchAcupoints() {
-  var kw = document.getElementById('acupointSearch').value.trim().toLowerCase();
-  var m = document.getElementById('meridianSelect').value;
+  var kw = document.getElementById('aS').value.trim().toLowerCase();
+  var m = document.getElementById('mS').value;
   activeMeridian = m;
-  var grid = document.getElementById('acupointGrid');
+  var grid = document.getElementById('aG');
   if (!grid) return;
   grid.innerHTML = '';
   var allPts = m ? acupointsFull[m] : Object.values(acupointsFull).flat();
@@ -399,26 +399,26 @@ function searchAcupoints() {
   }) : allPts;
   pts.forEach(function(p) {
     var card = document.createElement('div');
-    card.className = 'acupoint-card';
+    card.className = 'card';
     var isFav = gameState.favorites.indexOf('acu_' + p.name) !== -1;
-    card.innerHTML = '<button class="fav-btn ' + (isFav?'active':'') + '" onclick="toggleFav(event, \'acu_' + p.name + '\')">' + (isFav?'❤️':'🤍') + '</button><div class="acupoint-name">' + p.name + '</div><div class="acupoint-meridian">' + p.location + '</div><div class="acupoint-detail"><strong>功效：</strong>' + p.effect + '</div>';
+    card.innerHTML = '<button class="fn ' + (isFav?'hi':'') + '" onclick="toggleFav(event, \'acu_' + p.name + '\')">' + (isFav?'❤️':'🤍') + '</button><div class="cname">' + p.name + '</div><div class="cloc">' + p.location + '</div><div class="cdet"><strong>功效：</strong>' + p.effect + '</div>';
     card.onclick = function(){showAcuModal(p);};
     grid.appendChild(card);
   });
-  document.getElementById('acupointNoResults').style.display = pts.length ? 'none' : 'block';
+  document.getElementById('aN').style.display = pts.length ? 'none' : 'block';
 }
 
 function resetAcupoints() {
-  document.getElementById('acupointSearch').value = '';
-  document.getElementById('meridianSelect').value = '';
+  document.getElementById('aS').value = '';
+  document.getElementById('mS').value = '';
   activeMeridian = '';
-  document.querySelectorAll('.meridian-btn').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.mb').forEach(function(b){b.classList.remove('active');});
   renderAcupointsFlat();
 }
 
 function showAcuModal(p) {
-  document.getElementById('modalBody').innerHTML = '<div class="modal-title">' + p.name + '</div><div class="modal-row"><strong>定位：</strong>' + p.location + '</div><div class="modal-row"><strong>功效：</strong>' + p.effect + '</div><div class="modal-row"><strong>主治：</strong>' + p.indication + '</div><div class="modal-row"><strong>下针手法：</strong>' + p.method + '</div>';
-  document.getElementById('detailModal').classList.add('open');
+  document.getElementById('mB').innerHTML = '<div class="modal-title">' + p.name + '</div><div class="modal-row"><strong>定位：</strong>' + p.location + '</div><div class="modal-row"><strong>功效：</strong>' + p.effect + '</div><div class="modal-row"><strong>主治：</strong>' + p.indication + '</div><div class="modal-row"><strong>下针手法：</strong>' + p.method + '</div>';
+  document.getElementById('dMod').classList.add('open');
 }
 
 function toggleFav(e, id) {
@@ -433,29 +433,29 @@ function toggleFav(e, id) {
   }
   saveGame();
   checkAchievements('favorite_3');
-  if (document.getElementById('acupointGrid')) renderAcupointsFlat();
-  if (document.getElementById('medicineGrid')) renderMedicines(herbsFull);
+  if (document.getElementById('aG')) renderAcupointsFlat();
+  if (document.getElementById('meG')) renderMedicines(herbsFull);
 }
 
 // ===================== MEDICINES =====================
 function renderMedicines(arr) {
-  var grid = document.getElementById('medicineGrid');
+  var grid = document.getElementById('meG');
   if (!grid) return;
   grid.innerHTML = '';
   arr.forEach(function(h) {
     var card = document.createElement('div');
-    card.className = 'medicine-card';
+    card.className = 'card mrd';
     var isFav = gameState.favorites.indexOf('herb_' + h.name) !== -1;
-    card.innerHTML = '<button class="fav-btn ' + (isFav?'active':'') + '" onclick="toggleFav(event, \'herb_' + h.name + '\')">' + (isFav?'❤️':'🤍') + '</button><div class="medicine-name">' + h.name + '</div><div class="medicine-pinyin">' + h.pinyin + ' | ' + h.category + '</div><div class="medicine-info"><strong>四气：</strong>' + h.nature + ' <strong>五味：</strong>' + h.taste + '</div><div class="medicine-info"><strong>功效：</strong>' + h.effect + '</div>';
+    card.innerHTML = '<button class="fn ' + (isFav?'hi':'') + '" onclick="toggleFav(event, \'herb_' + h.name + '\')">' + (isFav?'❤️':'🤍') + '</button><div class="cname">' + h.name + '</div><div class="cpy">' + h.pinyin + ' | ' + h.category + '</div><div class="cdet"><strong>四气：</strong>' + h.nature + ' <strong>五味：</strong>' + h.taste + '</div><div class="cdet"><strong>功效：</strong>' + h.effect + '</div>';
     card.onclick = function(){showHerbModal(h);};
     grid.appendChild(card);
   });
-  document.getElementById('medicineNoResults').style.display = arr.length ? 'none' : 'block';
+  document.getElementById('meN').style.display = arr.length ? 'none' : 'block';
 }
 
 function searchMedicines() {
-  var kw = document.getElementById('medicineSearch').value.trim().toLowerCase();
-  var cat = document.getElementById('medicineCategory').value;
+  var kw = document.getElementById('meS').value.trim().toLowerCase();
+  var cat = document.getElementById('meC').value;
   var herbs = herbsFull.filter(function(h) {
     var ok = (!cat || h.category === cat);
     var kd = (!kw || h.name.toLowerCase().indexOf(kw) !== -1 || h.effect.toLowerCase().indexOf(kw) !== -1 || h.indication.toLowerCase().indexOf(kw) !== -1 || h.pinyin.toLowerCase().indexOf(kw) !== -1);
@@ -465,14 +465,14 @@ function searchMedicines() {
 }
 
 function resetMedicines() {
-  document.getElementById('medicineSearch').value = '';
-  document.getElementById('medicineCategory').value = '';
+  document.getElementById('meS').value = '';
+  document.getElementById('meC').value = '';
   renderMedicines(herbsFull);
 }
 
 function showHerbModal(h) {
-  document.getElementById('modalBody').innerHTML = '<div class="modal-title">' + h.name + ' <span style="font-size:0.6em;color:#888">' + h.pinyin + '</span></div><div class="modal-row"><strong>分类：</strong>' + h.category + '</div><div class="modal-row"><strong>四气：</strong>' + h.nature + ' <strong>五味：</strong>' + h.taste + '</div><div class="modal-row"><strong>归经：</strong>' + h.meridian + '</div><div class="modal-row"><strong>功效：</strong>' + h.effect + '</div><div class="modal-row"><strong>主治：</strong>' + h.indication + '</div><div class="modal-row"><strong>注意事项：</strong>' + h.caution + '</div>';
-  document.getElementById('detailModal').classList.add('open');
+  document.getElementById('mB').innerHTML = '<div class="modal-title">' + h.name + ' <span style="font-size:0.6em;color:#888">' + h.pinyin + '</span></div><div class="modal-row"><strong>分类：</strong>' + h.category + '</div><div class="modal-row"><strong>四气：</strong>' + h.nature + ' <strong>五味：</strong>' + h.taste + '</div><div class="modal-row"><strong>归经：</strong>' + h.meridian + '</div><div class="modal-row"><strong>功效：</strong>' + h.effect + '</div><div class="modal-row"><strong>主治：</strong>' + h.indication + '</div><div class="modal-row"><strong>注意事项：</strong>' + h.caution + '</div>';
+  document.getElementById('dMod').classList.add('open');
 }
 
 // ===================== QUIZ =====================
@@ -491,13 +491,13 @@ function initQuiz() {
 }
 
 function updateQuizUI() {
-  var el = document.getElementById('quizProgress');
-  if (el) el.style.width = Math.round((currentQ/quizTotal)*100) + '%';
-  var ael = document.getElementById('quizAnswered');
+  var el = document.getElementById('qPr');
+  if (el) { el.style.width = Math.round((currentQ/quizTotal)*100) + '%'; el.textContent = Math.round((currentQ/quizTotal)*100) + '%'; }
+  var ael = document.getElementById('qAn');
   if (ael) ael.textContent = quizAnswered;
-  var cel = document.getElementById('quizCorrect');
+  var cel = document.getElementById('qCr');
   if (cel) cel.textContent = quizCorrect;
-  var sel = document.getElementById('quizScore');
+  var sel = document.getElementById('qSc');
   if (sel) sel.textContent = gameState.score;
 }
 
@@ -505,12 +505,12 @@ function showQuestion() {
   if (currentQ >= quizTotal) { showResult(); return; }
   var q = quizData[currentQ];
   var pct = Math.round((currentQ/quizTotal)*100);
-  var el = document.getElementById('quizProgress');
-  if (el) el.style.width = pct + '%';
+  var el = document.getElementById('qPr');
+  if (el) { el.style.width = pct + '%'; el.textContent = pct + '%'; }
   var opts = q.options.map(function(o, i) {
-    return '<label class="quiz-option"><input type="radio" name="qopt" value="' + i + '"> ' + o + '</label>';
+    return '<label class="qopt"><input type="radio" name="qopt" value="' + i + '"> ' + o + '</label>';
   }).join('');
-  document.getElementById('quizContent').innerHTML = '<div class="quiz-question"><h3>第 ' + (currentQ+1) + '/' + quizTotal + ' 题：' + q.q + '</h3></div><div class="quiz-options">' + opts + '</div>';
+  document.getElementById('qC').innerHTML = '<div class="qh">第 ' + (currentQ+1) + '/' + quizTotal + ' 题：' + q.q + '</div><div class="qopts">' + opts + '</div>';
   answered = false;
 }
 
@@ -527,10 +527,9 @@ function submitAnswer() {
   var idx = parseInt(sel.value);
   var q = quizData[currentQ];
   var isCorrect = idx === q.answer;
-  document.querySelectorAll('.quiz-option').forEach(function(el, i) {
-    if (i === q.answer) el.classList.add('correct');
-    else if (i === idx && !isCorrect) el.classList.add('wrong');
-    el.classList.add('disabled');
+  document.querySelectorAll('.qopt').forEach(function(el, i) {
+    if (i === q.answer) el.classList.add('ok');
+    else if (i === idx && !isCorrect) el.classList.add('no');
   });
   quizAnswered++;
   if (isCorrect) {
@@ -559,18 +558,18 @@ function submitAnswer() {
 
 function showResult() {
   var pct = Math.round((quizCorrect/quizTotal)*100);
-  document.getElementById('quizContent').style.display = 'none';
-  document.getElementById('quizResult').style.display = 'block';
-  document.getElementById('resultScore').textContent = quizCorrect + '/' + quizTotal + ' (' + pct + '%)';
+  document.getElementById('qC').style.display = 'none';
+  document.getElementById('qRes').style.display = 'block';
+  document.getElementById('rS').textContent = quizCorrect + '/' + quizTotal + ' (' + pct + '%)';
   var msg = pct >= 90 ? '🎉 太棒了！中医大师！' : pct >= 70 ? '👍 很不错！继续加油！' : pct >= 50 ? '💪 还需努力，多复习！' : '📚 建议重新学习基础知识！';
-  document.getElementById('resultMessage').textContent = msg;
+  document.getElementById('rM2').textContent = msg;
 }
 
 function resetQuiz() { initQuiz(); }
 
 // ===================== QA =====================
 function buildQA() {
-  var list = document.getElementById('qaList');
+  var list = document.getElementById('qaL');
   if (!list) return;
   list.innerHTML = '';
   qaKnowledge.forEach(function(item) {
@@ -625,8 +624,8 @@ function setDaily() {
     allItems.push({type:'herb', name:h.name, desc:h.effect, pinyin:h.pinyin});
   });
   var item = allItems[seed % allItems.length];
-  document.getElementById('dailyName').textContent = '✨ ' + item.name;
-  document.getElementById('dailyDesc').textContent = item.desc + (item.location ? ' | ' + item.location : '');
+  document.getElementById('dn').textContent = '✨ ' + item.name;
+  document.getElementById('dd').textContent = item.desc + (item.location ? ' | ' + item.location : '');
 }
 
 function refreshDaily() {
@@ -640,16 +639,27 @@ function refreshDaily() {
     allItems.push({type:'herb', name:h.name, desc:h.effect, pinyin:h.pinyin});
   });
   var item = allItems[Math.floor(Math.random()*allItems.length)];
-  document.getElementById('dailyName').textContent = '✨ ' + item.name;
-  document.getElementById('dailyDesc').textContent = item.desc + (item.location ? ' | ' + item.location : '');
+  document.getElementById('dn').textContent = '✨ ' + item.name;
+  document.getElementById('dd').textContent = item.desc + (item.location ? ' | ' + item.location : '');
   showToast('换了一个推荐～');
 }
 
+function closeM() { document.getElementById('dMod').classList.remove('open'); }
+
+// Short function aliases
+function sA() { searchAcupoints(); }
+function rA() { resetAcupoints(); }
+function sM() { searchMedicines(); }
+function rM() { resetMedicines(); }
+function subQ() { submitAnswer(); }
+function initQ() { initQuiz(); }
+function fQA() { filterQA(); }
+function refreshD() { refreshDaily(); }
+
 // ===================== MODAL =====================
-document.getElementById('detailModal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
+document.getElementById('dMod').addEventListener('click', function(e) {
+  if (e.target === this) closeM();
 });
-function closeModal() { document.getElementById('detailModal').classList.remove('open'); }
 
 // ===================== INIT =====================
 loadGame();
@@ -663,5 +673,3 @@ setDaily();
 </script>
 </body>
 </html>
-
-</script></body></html>
